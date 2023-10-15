@@ -1,71 +1,59 @@
 package org.example;
 
-import java.util.Arrays;
-import java.util.stream.IntStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
 
 public class Main {
 
-    private static double a = 2.3;
-    private static double EPS = 1e-3;
-
     public static void main(String[] args) {
 
-        int n = (int) Math.round((2.8 - 0.2) / 0.002 + 1);
-        double[] x = IntStream.range(0, n).mapToDouble(i -> 0.2 + i * 0.002).toArray();
-        double[] y = fillY(x);
+        Scanner in = new Scanner(System.in);
+        int begin = in.nextInt();
+        int end = in.nextInt();
 
-        System.out.println(biggestYAndItsX(y, x));
-        System.out.println(leastYAndItsX(y, x));
+        int n = end - begin;
+        int[] nums = new int[n + 1];
 
-    }
-
-    public static String biggestYAndItsX(double[] yArr, double[] xArr){
-        double y = biggestY(yArr);
-        double x = xArr[Arrays.binarySearch(yArr, y)];
-        return String.format("Biggest y = %.3f; Its x =  %.3f", y, x);
-    }
-
-    public static String leastYAndItsX(double[] yArr, double[] xArr){
-        double y = leastY(yArr);
-        double x = xArr[Arrays.binarySearch(yArr, y)];
-        return String.format("Least y = %.3f; Its x =  %.3f", y, x);
-    }
-
-    public static double biggestY(double[] yArr){
-        Arrays.sort(yArr);
-        return yArr[yArr.length - 1];
-    }
-
-    public static double leastY(double[] yArr){
-        Arrays.sort(yArr);
-        return yArr[0];
-    }
-
-    public static double yArraySum(double[] yArr){
-        return Arrays.stream(yArr).sum();
-    }
-
-    public static double yArithmeticMean(double[] yArr){
-        return yArraySum(yArr) / yArr.length;
-    }
-
-    public static double[] fillY(double[] x){
-        return Arrays.stream(x).map(Main::function).toArray();
-    }
-
-    public static double function(double x){
-
-        double y;
-
-        if (x <= 0.3+EPS){
-            y = 1.5 * a * Math.pow(Math.cos(x), 2);
-        } else if (x > 0.3 && x <= 2.3+EPS) {
-            y = Math.pow((x - 2), 2) + 6 * a;
-        } else {
-            y = 3 * a * Math.tan(x);
+        for (int i = 0; begin <= end; i++) {
+            nums[i] = begin;
+            begin++;
         }
 
-        return y;
+        List<Integer> primeNumbers = new ArrayList<>();
+
+        for (int num : nums) {
+            if (isPrime(num)) {
+                primeNumbers.add(num);
+            }
+        }
+
+        int counter = 0;
+
+        StringBuilder input = new StringBuilder();
+
+        for (Integer l : primeNumbers) {
+            input.append(l);
+            if (isPrime(Integer.parseInt(String.valueOf(input.reverse())))){
+                counter++;
+            }
+            input.delete(0, input.length());
+        }
+
+        System.out.println(counter);
+
+    }
+
+    public static boolean isPrime (int number){
+        if (number == 1){
+            return false;
+        }
+        for (int i = 2; i <= number / 2; i++){
+            if (number % i == 0){
+                return false;
+            }
+        }
+        return true;
     }
 
 }
